@@ -6,7 +6,7 @@ except ImportError:
     # python3?
     import urllib.request as urllib2
 
-GITHUB_REPO = 'vitasdk/autobuilds'
+GITHUB_REPO = 'vitasdk-softfp/autobuilds'
 GITHUB_API = 'https://api.github.com'
 GITHUB_REL = GITHUB_API + '/repos/' + GITHUB_REPO + '/releases'
 
