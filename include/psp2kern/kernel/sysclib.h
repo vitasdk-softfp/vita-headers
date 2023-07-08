@@ -6,6 +6,7 @@
 #ifndef _PSP2KERN_KERNEL_SYSCLIB_H_
 #define _PSP2KERN_KERNEL_SYSCLIB_H_
 
+#include <psp2kern/types.h>
 #include <stdarg.h>
 
 #ifdef __cplusplus
@@ -14,6 +15,17 @@ extern "C" {
 
 
 typedef void (* SceSysclibPrntCallback)(void *argp, int ch);
+
+typedef enum SceCTypeFlag {
+	SCE_CTYPE_NONE      = 0,
+	SCE_CTYPE_UPPERCASE = 1,
+	SCE_CTYPE_LOWERCASE = 2,
+	SCE_CTYPE_NUMBER    = 4,
+	SCE_CTYPE_CONTROL   = 8,
+	SCE_CTYPE_SYMBOL    = 0x10,
+	SCE_CTYPE_INVISIBLE = 0x20,
+	SCE_CTYPE_HEX_CASE  = 0x40
+} SceCTypeFlag;
 
 
 /**
@@ -144,6 +156,19 @@ char *strncpy(char *dst, const char *src, unsigned int n);
 
 int snprintf(char *dst, unsigned int max, const char *fmt, ...);
 int vsnprintf(char *dst, unsigned int max, const char *fmt, va_list arg);
+
+
+char look_ctype_table(char ch);
+
+int tolower(int ch);
+int toupper(int ch);
+
+int timingsafe_memcmp(const void *s1, const void *s2, size_t n);
+
+long strtol(const char *str, char **endptr, int base);
+long long strtoll(const char *str, char **endptr, int base);
+unsigned long strtoul(const char *str, char **endptr, int base);
+
 
 void *__memcpy_chk(void *dst, const void *src, unsigned int len, unsigned int dst_len);
 void *__memset_chk(void *dst, int ch, unsigned int len, unsigned int dst_len);

@@ -6,6 +6,7 @@
 #ifndef _PSP2KERN_KERNEL_SYSMEM_H_
 #define _PSP2KERN_KERNEL_SYSMEM_H_
 
+#include <vitasdk/build_utils.h>
 #include <psp2kern/types.h>
 #include <psp2kern/kernel/sysmem/uid_class.h>
 #include <psp2kern/kernel/sysmem/uid_guid.h>
@@ -57,6 +58,7 @@ typedef struct SceKernelAllocMemBlockKernelOpt {
 	SceUInt32 field_50;
 	SceUInt32 field_54;
 } SceKernelAllocMemBlockKernelOpt;
+VITASDK_BUILD_ASSERT_EQ(0x58, SceKernelAllocMemBlockKernelOpt);
 
 /**
  * Allocates a new memory block
@@ -119,6 +121,16 @@ SceUID ksceKernelFindMemBlockByAddr(const void *addr, SceSize size);
  * @return SceUID of the memory block on success, < 0 on error.
 */
 SceUID ksceKernelFindMemBlockByAddrForPid(SceUID pid, const void *addr, SceSize size);
+
+/**
+ * Get the AllocMapSize of a MemBlock
+ *
+ * @param[in]           memid - The target uid of the memblock
+ * @param[out] alloc_map_size - The output for AllocMapSize
+ *
+ * @return SCE_OK on success, < 0 on error.
+ */
+int ksceKernelGetMemBlockAllocMapSize(SceUID memid, SceSize *alloc_map_size);
 
 /**
  * Changes the block type

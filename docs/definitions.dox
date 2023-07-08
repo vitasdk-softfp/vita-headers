@@ -98,6 +98,9 @@
  *
  *     \defgroup SceShutterSound Shutter Sounds Library
  *      Play camera related shutter sounds
+ *
+ *     \defgroup SceUsbAudio Usb Audio In Library
+ *      Capture sound from usb microphone
  * \}
  *
  *
@@ -151,6 +154,9 @@
  * \{
  *     \defgroup SceSblDmac5Mgr DMAC5 Library for user
  *      DMAC5 AES/SHA/stdc...
+ *
+ *     \defgroup SceSblPostSsMgr Post Ss Library
+ *      RSA, utoken
  * \}
  *
  * \defgroup Lowio Low-level I/O and communications
@@ -253,6 +259,9 @@
  *
  *     \defgroup SceDipsw dip switch Library
  *      CP info, some system flags
+ *
+ *     \defgroup SceSystimer Hardware Timer Library
+ *      Interface for hardware timers
  * \}
  *
  * \defgroup update Update

@@ -26,23 +26,38 @@ jobs:
         export VITASDK=$PWD/vitasdk
         export PATH=$VITASDK/bin:$PATH
         export INCLUDE_DIR=$TRAVIS_BUILD_DIR/include
+        vita-nid-check -dbg=debug -dbdirver="./db"
         # Make sure headers are valid
-        find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-vita-eabi-gcc -I$INCLUDE_DIR -c FN -o /dev/null
-        find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-vita-eabi-g++ -I$INCLUDE_DIR -c FN -o /dev/null
+        find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-vita-eabi-gcc -I$INCLUDE_DIR -fsyntax-only -c FN -o /dev/null
+        find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-vita-eabi-g++ -I$INCLUDE_DIR -fsyntax-only -c FN -o /dev/null
         #bash $TRAVIS_BUILD_DIR/.travis.d/download_external_libs.sh
         cd $VITASDK/arm-vita-eabi/include
-        rm -rf psp2 psp2kern vitasdk vitasdk.h
+        rm -rf psp2 psp2common psp2kern vitasdk vitasdk.h vitasdkkern.h
         cd $VITASDK/arm-vita-eabi/lib
         rm -rf *_stub.a
         cd $TRAVIS_BUILD_DIR
         cp -r include/* $VITASDK/arm-vita-eabi/include
+        # header define check
         USE_LINT=1 python3 build.py output
         vdpm SDL2
         vdpm curl
         vdpm openssl
         vdpm soloud
         vdpm zlib
-        cd $TRAVIS_BUILD_DIR
+        vdpm taihen
+    - name: Header sanitize checks
+      run: |
+        export VITASDK=$PWD/vitasdk
+        export PATH=$VITASDK/bin:$PATH
+        cd check_size
+        mkdir build
+        cd build
+        cmake ..
+        make
+    - name: Sample build test
+      run: |
+        export VITASDK=$PWD/vitasdk
+        export PATH=$VITASDK/bin:$PATH
         git clone https://github.com/vitasdk/samples
         cd samples
         mkdir build

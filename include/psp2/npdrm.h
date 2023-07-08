@@ -7,53 +7,13 @@
 #define _PSP2_NPDRM_H_
 
 #include <psp2/types.h>
+#include <psp2common/npdrm.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct SceNpDrmLicense { // size is 0x200
-  SceInt16 version;       // -1, 1
-  SceInt16 version_flags; // 0, 1
-  SceInt16 license_type;  // 1
-  SceInt16 license_flags; // 0x400:non-check ecdsa
-  SceUInt64 account_id;
-  char content_id[0x30];
-  char key_table[0x10];
-  char key1[0x10];
-  SceInt64 start_time;
-  SceInt64 expiration_time;
-  char ecdsa_signature[0x28];
-  SceInt64 flags;
-  char key2[0x10];
-  char unk_0xB0[0x10];
-  char open_psid[0x10];
-  char unk_0xD0[0x10];
-  char cmd56_handshake_part[0x14];
-  int debug_upgradable;
-  int unk_0xF8;
-  int sku_flag;
-  char rsa_signature[0x100];
-} SceNpDrmLicense;
-
-typedef struct ScePsmDrmLicense {
-  char magic[0x8];             
-  SceUInt32 unk1;               
-  SceUInt32 unk2;               
-  SceUInt64 account_id;                
-  SceUInt32 unk3;               
-  SceUInt32 unk4;               
-  SceUInt64 start_time;         
-  SceUInt64 expiration_time;    
-  SceUInt8 activation_checksum[0x20];    
-  char content_id[0x30];       
-  SceUInt8 unk5[0x80];          
-  SceUInt8 unk6[0x20];
-  SceUInt8 key[0x10];
-  SceUInt8 signature[0x1D0];
-  SceUInt8 rsa_signature[0x100]; 
-} ScePsmDrmLicense;
   
 /**
  * Get rif name
@@ -76,6 +36,21 @@ int _sceNpDrmGetRifName(char *rif_name, uint64_t aid);
  * @return 0 on success, < 0 on error.
 */
 int _sceNpDrmGetFixedRifName(char *rif_name, uint64_t aid);
+
+/**
+ * Check you have npdrm activation data, and get information from it
+ *
+ * @param[out]  act_type        - The pointer of activation type output.
+ *
+ * @param[out]  version_flag    - The pointer of version flag output.
+ *
+ * @param[out]  account_id      - The pointer of activated account id output.
+ *
+ * @param[out]  act_exp_time    - The pointer of activation expire time output, [0] is start_date, [1] is end_date
+ *
+ * @return 0 on success, < 0 on error.
+*/
+int _sceNpDrmCheckActData(int *act_type, int *version_flag, SceUInt64 *account_id, SceUInt64 act_exp_time[2]);
 
 /**
  * Get rif name for install

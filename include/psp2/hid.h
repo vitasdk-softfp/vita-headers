@@ -11,14 +11,17 @@
 extern "C" {
 #endif
 
+#include <vitasdk/build_utils.h>
 #include <psp2/types.h>
 
 typedef struct SceHidKeyboardReport {
 	SceUInt8 reserved;
 	SceUInt8 modifiers[2]; //modifiers[0] Standard modifiers Ctrl Shift Alt, modifiers[1] Caps Lock, ..?
 	SceUInt8 keycodes[6];
-	SceUInt8 unk1[15];
+	SceUInt8 reserved2[7];
+	SceUInt64 timestamp; // microseconds
 } SceHidKeyboardReport;
+VITASDK_BUILD_ASSERT_EQ(0x18, SceHidKeyboardReport);
 
 typedef struct SceHidMouseReport {
 	SceUInt8 buttons;
@@ -27,6 +30,7 @@ typedef struct SceHidMouseReport {
 	SceInt16 rel_y;
 	SceInt8 unk[10];
 } SceHidMouseReport;
+VITASDK_BUILD_ASSERT_EQ(0x10, SceHidMouseReport);
 
 #define SCE_HID_MAX_REPORT 16
 #define SCE_HID_MAX_DEVICE_COUNT 8
@@ -41,13 +45,22 @@ int sceHidKeyboardEnumerate(int* handle, int count);
 
 
 /**
- * Get hid keyboard reports.
+ * Get hid keyboard reports (blocking).
  *
  * @param[in]	handle		Hid handle.
  * @param[in]	reports		Buffer to receive reports.
  * @param[in]	nReports	Number of reports to receive.
  */
 int sceHidKeyboardRead(SceUInt32 handle, SceHidKeyboardReport *reports[], int nReports);
+
+/**
+ * Get hid keyboard reports (non-blocking).
+ *
+ * @param[in]	handle		Hid handle.
+ * @param[in]	reports		Buffer to receive reports.
+ * @param[in]	nReports	Number of reports to receive.
+ */
+int sceHidKeyboardPeek(SceUInt32 handle, SceHidKeyboardReport *reports[], int nReports);
 
 /**
  * Enumerate hid mice.
