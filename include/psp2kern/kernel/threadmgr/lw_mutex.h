@@ -9,21 +9,12 @@
 
 #include <vitasdk/build_utils.h>
 #include <psp2kern/types.h>
+#include <psp2common/kernel/threadmgr.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-typedef struct  SceKernelLwMutexWork {
-	SceInt64 data[4];
-} SceKernelLwMutexWork;
-VITASDK_BUILD_ASSERT_EQ(0x20, SceKernelLwMutexWork);
-
-typedef struct SceKernelLwMutexOptParam {
-	SceSize size;
-} SceKernelLwMutexOptParam;
-VITASDK_BUILD_ASSERT_EQ(4, SceKernelLwMutexOptParam);
 
 typedef struct SceKernelLwMutexInfo {
 	SceSize size;
@@ -39,11 +30,6 @@ typedef struct SceKernelLwMutexInfo {
 VITASDK_BUILD_ASSERT_EQ(0x40, SceKernelLwMutexInfo);
 
 int ksceKernelGetLwMutexInfo(SceUID lwmtxid, SceKernelLwMutexInfo *info);
-
-int ksceKernelInitializeFastMutex(void *mutex, const char *name, int unk0, int unk1);
-int ksceKernelLockFastMutex(void *mutex);
-int ksceKernelUnlockFastMutex(void *mutex);
-int ksceKernelDeleteFastMutex(void *mutex);
 
 
 #ifdef __cplusplus

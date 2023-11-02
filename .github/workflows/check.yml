@@ -26,34 +26,46 @@ jobs:
         export VITASDK=$PWD/vitasdk
         export PATH=$VITASDK/bin:$PATH
         export INCLUDE_DIR=$TRAVIS_BUILD_DIR/include
-        vita-nid-check -dbg=debug -dbdirver="./db"
+        ls ./db | xargs -I__name__ vita-nid-check -dbdirver=./db/__name__ -dbg=trace
         # Make sure headers are valid
-        find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-vita-eabi-gcc -I$INCLUDE_DIR -fsyntax-only -c FN -o /dev/null
-        find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-vita-eabi-g++ -I$INCLUDE_DIR -fsyntax-only -c FN -o /dev/null
-        #bash $TRAVIS_BUILD_DIR/.travis.d/download_external_libs.sh
+        # bash $TRAVIS_BUILD_DIR/.travis.d/download_external_libs.sh
         cd $VITASDK/arm-vita-eabi/include
         rm -rf psp2 psp2common psp2kern vitasdk vitasdk.h vitasdkkern.h
+        cd $TRAVIS_BUILD_DIR
+        find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-vita-eabi-gcc -I$INCLUDE_DIR -fsyntax-only -c FN -o /dev/null
+        find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-vita-eabi-g++ -I$INCLUDE_DIR -fsyntax-only -c FN -o /dev/null
         cd $VITASDK/arm-vita-eabi/lib
         rm -rf *_stub.a
         cd $TRAVIS_BUILD_DIR
         cp -r include/* $VITASDK/arm-vita-eabi/include
         # header define check
-        USE_LINT=1 python3 build.py output
+        BYPASS_VITA_LIBS_GEN=1 USE_LINT=1 python3 build.py output
         vdpm SDL2
         vdpm curl
         vdpm openssl
         vdpm soloud
         vdpm zlib
         vdpm taihen
+    - name: DB Stub test
+      run: |
+        export VITASDK=$PWD/vitasdk
+        export PATH=$VITASDK/bin:$PATH
+        vita-libs-gen-2 -yml=./db -output=./stubs
+        cd ./stubs
+        make -j$(nproc) install
+        cd ..
+        rm stubs/makefile
+        tar "cfvj" "vitasdk-db-stubs.tar.bz2" "stubs"
     - name: Header sanitize checks
       run: |
         export VITASDK=$PWD/vitasdk
         export PATH=$VITASDK/bin:$PATH
         cd check_size
+        python3 ./includes_all.py ../include
         mkdir build
         cd build
         cmake ..
-        make
+        make -j$(nproc)
     - name: Sample build test
       run: |
         export VITASDK=$PWD/vitasdk
@@ -64,3 +76,9 @@ jobs:
         cd build
         cmake ..
         make -j$(nproc)
+    - name: Upload artifacts
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: vitasdk-db-stubs
+        path: vitasdk-db-stubs.tar.bz2
