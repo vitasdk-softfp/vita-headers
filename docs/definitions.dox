@@ -435,6 +435,18 @@
  * \}
  *
  *
+ * \defgroup Internal Internal
+ *  Internal definitions used by the system (like used in non-export function)
+ * \{
+ *     \defgroup SceExfatfs FileSystem handler
+ *      The FileSystem vfs handler
+ *
+ *     \defgroup SceSdstor blockdev handler
+ *      The block device vfs handler
+ *
+ * \}
+ *
+ *
  * \defgroup Miscellaneous Miscellaneous
  *  Various Libraries that don't fit in other categories
  * \{

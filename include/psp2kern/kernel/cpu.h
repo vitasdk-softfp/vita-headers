@@ -93,7 +93,7 @@ static inline int ksceKernelDomainTextMemcpy(void *dst, const void *src, SceSize
 
 	memcpy(dst, src, len);
 
-	ksceKernelDcacheCleanRangeForL1WBWA((void *)(((uintptr_t)dst) & ~0x1F), ((((uintptr_t)dst) + len + 0x1F) & ~0x1F) - (((uintptr_t)dst) & 0x1F));
+	ksceKernelDcacheCleanRangeForL1WBWA((void *)(((uintptr_t)dst) & ~0x1F), ((((uintptr_t)dst) + len + 0x1F) & ~0x1F) - (((uintptr_t)dst) & ~0x1F));
 
 	asm volatile("mcr p15, 0, %0, c3, c0, 0" :: "r" (prev_dacr));
 
@@ -102,13 +102,14 @@ static inline int ksceKernelDomainTextMemcpy(void *dst, const void *src, SceSize
 #endif
 
 
-// ksceKernelGetVmaccessRange
+// sceKernelGetVmaccessRange had prototype changed in some times
+void ksceKernelGetVmaccessRange(SceUIntPtr *pRangeStart, SceUIntPtr *pRangeEnd);
 
 void ksceKernelCpuBranchPredictorInvalidateAll(void);
 void ksceKernelCpuBranchPredictorInvalidateAllIS(void);
 
 SceUInt8 ksceKernelCpuGetCONTEXTIDR(void);
-// ksceKernelCpuUpdateSCTLR
+void ksceKernelCpuUpdateSCTLR(void);
 
 SceBool ksceKernelIsUncacheAddressInTmpFsGame(void *address);
 

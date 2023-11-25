@@ -25,6 +25,16 @@ extern "C" {
 int ksceKernelVAtoPA(const void *va, uintptr_t *pa);
 
 /**
+ * Get the physical address range of a given virtual address range
+ *
+ * @param[in]  va_range  - The virtual address range
+ * @param[out] pa_range - The vector of physical addresses
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int ksceKernelVARangeToPARange(const SceKernelVARange *va_range, SceKernelPARange *pa_range);
+
+/**
  * Get the physical address list of a given virtual address range
  *
  * @param[in]  va_range  - The virtual address range
@@ -59,7 +69,15 @@ int ksceKernelProcessGetContext(SceUID pid, SceKernelProcessContext **ctx);
 int ksceKernelProcessSwitchContext(const SceKernelProcessContext *new_context, SceKernelProcessContext *prev_context);
 
 
-#if defined(SCE_SDK_VERSION) && SCE_SDK_VERSION <= 0x1692000
+int ksceKernelAddressSpaceFreeAllMemBlock(SceUID guid);
+int ksceKernelAddressSpaceSetPhyMemPart(SceUID guid, SceUInt32 index, void *pPhyMemPart);
+int ksceKernelAddressSpaceUnmap(SceUID uid, int a2, int a3, void* addr, SceSize size);
+int ksceKernelAddressSpaceVAtoPA(void *pAS, SceUInt32 mode, void *pVA, void **pPA);
+SceUID ksceKernelCreateAddressSpace(SceUID pid, const char *name, SceUInt32 type, void *pOpt);
+int ksceKernelDeleteAddressSpace(SceUID guid);
+
+
+#if defined(PSP2_SDK_VERSION) && PSP2_SDK_VERSION <= 0x1692000
 int ksceKernelSwitchVmaForPid(SceUID pid);
 #endif
 
