@@ -21,8 +21,9 @@ int ksceSblGcAuthMgrDrmBBClearCartSecret(void);
 
 /**
  * @brief Gets derived cart secret from memory.
+ * should be the result of sha256 of the cartridges 2 unique per-game keys
  *
- * @param[in]  secret - Pointer to 0x20 bytes.
+ * @param[out]  secret - Pointer to 0x20 bytes.
  *
  * @return 0 on success, < 0 on error.
  */
