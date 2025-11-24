@@ -28,6 +28,15 @@ int ksceSblGcAuthMgrDrmBBClearCartSecret(void);
  */
 int ksceSblGcAuthMgrDrmBBGetCartSecret(void* secret);
 
+/**
+ * @brief Checks a given value and compares to the hash derived from authentication step
+ *
+ * @param[in]  hash - Pointer to 0x14 byte hash value to compare against
+ *
+ * @return 0 if matches, < 0 if does not match.
+ */
+int ksceSblGcAuthMgrDrmBBCheckCartHash(const void* hash);
+
 #ifdef __cplusplus
 }
 #endif
